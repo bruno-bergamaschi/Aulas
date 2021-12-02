@@ -1,0 +1,5 @@
+Os repositórios são responsáveis por acessar o banco de dados
+e realizar os comandos de post, get e etc.
+
+ICategoriesRespository.ts é o modelo (contrato) e o CategoriesRepository implementa ele, recebendo o modelo
+de métodos.
