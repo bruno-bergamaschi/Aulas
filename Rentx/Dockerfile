@@ -8,8 +8,7 @@ WORKDIR /usr/app
 COPY package.json ./
 
 # Rodar o npm instal para baixar todas as dependências necessárias. Recomenda-se o NPM.
-RUN npm install
-RUN yarn add ts-node-dev
+RUN yarn
 
 # Copiar tudo para dentro do WORKDIR
 COPY . .

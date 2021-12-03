@@ -17,6 +17,7 @@ const upload = multer({
 
 // O caminho pode ser '/', pois está sendo passado diretamente no arquivo 'server.ts'
 categoriesRoutes.post('/', (req, res) => {
+    console.log('reload apto')
     return createCategoryController.handle(req, res);
 });
 

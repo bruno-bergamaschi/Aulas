@@ -16,7 +16,7 @@ class CreateCategoryUseCase {
     execute({ name, description }: IRequest): void {
 
         const categoryAlreadyExists = this.categoriesRepository.findByName(name);
-        console.log(categoryAlreadyExists);
+
         if (categoryAlreadyExists) {
             // throw new Error irá retornar o erro, substituindo o response
             throw new Error("Category already exists");
