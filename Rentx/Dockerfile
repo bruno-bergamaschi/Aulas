@@ -9,6 +9,7 @@ COPY package.json ./
 
 # Rodar o npm instal para baixar todas as dependências necessárias. Recomenda-se o NPM.
 RUN npm install
+RUN yarn add ts-node-dev
 
 # Copiar tudo para dentro do WORKDIR
 COPY . .
