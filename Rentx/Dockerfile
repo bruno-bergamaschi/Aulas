@@ -14,7 +14,7 @@ RUN yarn
 COPY . .
 
 # Informar a porta utilizada
-EXPOSE 3333
+EXPOSE 3030
 
 # Permite e configura rodar comandos
 CMD ["npm", "run", "dev"]
