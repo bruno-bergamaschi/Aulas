@@ -2,9 +2,12 @@ import { SpecificationRepository } from "../../repositories/implementations/Spec
 import { ListSpecificationController } from "./ListSpecificationController";
 import { ListSpecificationUseCase } from "./ListSpecificationUseCase";
 
+const specificationRepository = null;
+const listSpecificationUseCase = new ListSpecificationUseCase(
+	specificationRepository
+);
+const listSpecificationController = new ListSpecificationController(
+	listSpecificationUseCase
+);
 
-const specificationRepository = SpecificationRepository.getInstance();
-const listSpecificationUseCase = new ListSpecificationUseCase(specificationRepository);
-const listSpecificationController = new ListSpecificationController(listSpecificationUseCase);
-
-export { listSpecificationController }
+export { listSpecificationController };

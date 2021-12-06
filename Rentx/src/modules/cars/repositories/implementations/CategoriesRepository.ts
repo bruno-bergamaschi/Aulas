@@ -1,57 +1,41 @@
-import { Category } from '../../entities/Category'
+import { getRepository } from "typeorm";
+import { Repository } from "typeorm/repository/Repository";
+import { Category } from "../../entities/Category";
 import {
-  ICategoriesRepository,
-  ICreateCategoryDTO,
-} from '../ICategoriesRepository'
-
-// Singleton
+	ICategoriesRepository,
+	ICreateCategoryDTO,
+} from "../ICategoriesRepository";
 
 class CategoriesRepository implements ICategoriesRepository {
-  private categories: Category[]
+	private repository: Repository<Category>;
 
-  private static INSTANCE: CategoriesRepository
+	private static INSTANCE: CategoriesRepository;
 
-  private constructor() {
-    this.categories = []
-  }
+	constructor() {
+		this.repository = getRepository(Category);
+	}
 
-  public static getInstance(): CategoriesRepository {
-    if (!CategoriesRepository.INSTANCE) {
-      CategoriesRepository.INSTANCE = new CategoriesRepository()
-    }
+	// A função está recebendo de forma desestruturada, as informações do ICreateCategoryDTO, que recebe da ROTA
+	// void = A função não terá retorno
+	async create({ name, description }: ICreateCategoryDTO): Promise<void> {
+		const category = this.repository.create({
+			name,
+			description,
+		});
 
-    return CategoriesRepository.INSTANCE
-  }
+		await this.repository.save(category);
+	}
 
-  // A função está recebendo de forma desestruturada, as informações do ICreateCategoryDTO, que recebe da ROTA
-  // void = A função não terá retorno
-  create({ name, description }: ICreateCategoryDTO): void {
-    // Atribuindo o new Category(), é possível acessar o construtor para que seja atribuído o ID na criação
-    const category = new Category()
+	async list(): Promise<Category[]> {
+		const category = await this.repository.find();
+		return category;
+	}
 
-    // Object.assign permite inserir informação em todos os atributos de category, exutando o código
-    // Exemplo sem Object.assign:
-    // category.name = name;
-    // category.description = description;
-    // category.created_at = created_at;
-    Object.assign(category, {
-      name,
-      description,
-      created_at: new Date(),
-    })
-
-    this.categories.push(category)
-  }
-
-  list(): Category[] {
-    return this.categories
-  }
-
-  findByName(name: string): Category {
-    const category = this.categories.find((category) => category.name === name)
-
-    return category
-  }
+	async findByName(name: string): Promise<Category> {
+		// Select * from categories where name = "name" limit 1
+		const category = await this.repository.findOne({ name });
+		return category;
+	}
 }
 
-export { CategoriesRepository }
+export { CategoriesRepository };
