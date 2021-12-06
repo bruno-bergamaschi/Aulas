@@ -1,45 +1,49 @@
-import { Specification } from "../../models/Specifications";
-import { ICreateSpecificationDTO, ISpecificationRepository } from "../ISpecificationRepository";
+import { Specification } from '../../entities/Specifications'
+import {
+  ICreateSpecificationDTO,
+  ISpecificationRepository,
+} from '../ISpecificationRepository'
 
 class SpecificationRepository implements ISpecificationRepository {
-    private specifications: Specification[];
+  private specifications: Specification[]
 
-    private static INSTANCE: SpecificationRepository;
+  private static INSTANCE: SpecificationRepository
 
-    constructor() {
-        this.specifications = [];
+  constructor() {
+    this.specifications = []
+  }
+
+  public static getInstance(): SpecificationRepository {
+    if (!SpecificationRepository.INSTANCE) {
+      SpecificationRepository.INSTANCE = new SpecificationRepository()
     }
 
-    public static getInstance(): SpecificationRepository {
-        if (!SpecificationRepository.INSTANCE) {
-            SpecificationRepository.INSTANCE = new SpecificationRepository();
-        }
+    return SpecificationRepository.INSTANCE
+  }
 
-        return SpecificationRepository.INSTANCE;
-    }
+  create({ name, description }: ICreateSpecificationDTO): void {
+    const specification = new Specification()
 
-    create({ name, description }: ICreateSpecificationDTO): void {
-        const specification = new Specification();
+    Object.assign(specification, {
+      name,
+      description,
+      created_at: new Date(),
+    })
 
-        Object.assign(specification, {
-            name,
-            description,
-            created_at: new Date()
-        });
+    this.specifications.push(specification)
+  }
 
-        this.specifications.push(specification);
-    }
+  list(): Specification[] {
+    return this.specifications
+  }
 
-    list(): Specification[] {
-        return this.specifications;
-    }
+  findByName(name: string): Specification {
+    const specification = this.specifications.find(
+      (specification) => specification.name === name,
+    )
 
-    findByName(name: string): Specification {
-        const specification = this.specifications.find((specification) => specification.name === name);
-
-        return specification;
-    }
-
+    return specification
+  }
 }
 
 export { SpecificationRepository }
