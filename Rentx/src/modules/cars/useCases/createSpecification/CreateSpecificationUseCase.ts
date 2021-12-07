@@ -1,12 +1,17 @@
+import "reflect-metadata";
+import { inject, injectable } from "tsyringe";
 import { ISpecificationRepository } from "../../repositories/ISpecificationRepository";
 
 interface IRequest {
 	name: string;
 	description: string;
 }
-
+@injectable()
 class CreateSpecificationUseCase {
-	constructor(private specificationRepository: ISpecificationRepository) {}
+	constructor(
+		@inject("SpecificationRepository")
+		private specificationRepository: ISpecificationRepository
+	) {}
 
 	async execute({ name, description }: IRequest): Promise<void> {
 		const specificationAlreadyExists =
@@ -16,7 +21,7 @@ class CreateSpecificationUseCase {
 			throw new Error("Specification already exists");
 		}
 
-		this.specificationRepository.create({
+		await this.specificationRepository.create({
 			name,
 			description,
 		});

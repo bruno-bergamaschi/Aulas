@@ -1,49 +1,39 @@
-import { Specification } from '../../entities/Specifications'
+import { getRepository } from "typeorm";
+import { Repository } from "typeorm/repository/Repository";
+import { Specification } from "../../entities/Specifications";
 import {
-  ICreateSpecificationDTO,
-  ISpecificationRepository,
-} from '../ISpecificationRepository'
+	ICreateSpecificationDTO,
+	ISpecificationRepository,
+} from "../ISpecificationRepository";
 
 class SpecificationRepository implements ISpecificationRepository {
-  private specifications: Specification[]
+	private repository: Repository<Specification>;
 
-  private static INSTANCE: SpecificationRepository
+	private static INSTANCE: SpecificationRepository;
 
-  constructor() {
-    this.specifications = []
-  }
+	constructor() {
+		this.repository = getRepository(Specification);
+	}
 
-  public static getInstance(): SpecificationRepository {
-    if (!SpecificationRepository.INSTANCE) {
-      SpecificationRepository.INSTANCE = new SpecificationRepository()
-    }
+	async create({ name, description }: ICreateSpecificationDTO): Promise<void> {
+		const specification = this.repository.create({
+			name,
+			description,
+		});
 
-    return SpecificationRepository.INSTANCE
-  }
+		await this.repository.save(specification);
+	}
 
-  create({ name, description }: ICreateSpecificationDTO): void {
-    const specification = new Specification()
+	async list(): Promise<Specification[]> {
+		const specification = await this.repository.find();
+		return specification;
+	}
 
-    Object.assign(specification, {
-      name,
-      description,
-      created_at: new Date(),
-    })
+	async findByName(name: string): Promise<Specification> {
+		const specification = await this.repository.findOne({ name });
 
-    this.specifications.push(specification)
-  }
-
-  list(): Specification[] {
-    return this.specifications
-  }
-
-  findByName(name: string): Specification {
-    const specification = this.specifications.find(
-      (specification) => specification.name === name,
-    )
-
-    return specification
-  }
+		return specification;
+	}
 }
 
-export { SpecificationRepository }
+export { SpecificationRepository };
