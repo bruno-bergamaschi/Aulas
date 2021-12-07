@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { inject, injectable } from "tsyringe";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { IUsersRepository } from "../../respositories/IUsersRepository";
 
@@ -17,13 +17,19 @@ class CreateUserUseCase {
 		password,
 		driver_license,
 	}: ICreateUserDTO): Promise<void> {
-		// const passwordHash = await hash(password, 10);
+		const userAlreadyExists = await this.usersRepository.findByEmail(email);
+
+		if (userAlreadyExists) {
+			throw new Error("User already exists");
+		}
+
+		const passwordHash = await hash(password, 10);
 
 		await this.usersRepository.create({
 			name,
 			email,
-			// password: passwordHash,
-			password,
+			password: passwordHash,
+			// password,
 			driver_license,
 		});
 	}

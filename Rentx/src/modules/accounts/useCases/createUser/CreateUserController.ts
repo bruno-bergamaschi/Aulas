@@ -1,4 +1,4 @@
-import { User } from "../../entities/User";
+import "reflect-metadata";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { CreateUserUseCase } from "./CreateUserUseCase";
