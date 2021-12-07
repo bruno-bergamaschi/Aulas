@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3333
 
 # Permite e configura rodar comandos
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
