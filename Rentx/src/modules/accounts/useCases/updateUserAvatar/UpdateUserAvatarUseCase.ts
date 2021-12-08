@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { inject } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import { IUsersRepository } from "../../respositories/IUsersRepository";
 
 interface IRequest {
@@ -7,6 +7,7 @@ interface IRequest {
 	avatar_file: string;
 }
 
+@injectable()
 class UpdateUserAvatarUseCase {
 	// Adicionar coluna avatar na tabela de users - ok
 	// Refatorar usuário com coluna avatar - ok
@@ -21,7 +22,6 @@ class UpdateUserAvatarUseCase {
 
 	async execute({ user_id, avatar_file }: IRequest): Promise<void> {
 		const user = await this.userRepository.findById(user_id);
-
 		user.avatar = avatar_file;
 
 		await this.userRepository.create(user);
